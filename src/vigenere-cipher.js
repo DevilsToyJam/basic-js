@@ -20,15 +20,58 @@ const { NotImplementedError } = require('../extensions/index.js');
  * 
  */
 class VigenereCipheringMachine {
-  encrypt() {
-    throw new NotImplementedError('Not implemented');
-    // remove line with error and write your code here
-  }
-  decrypt() {
-    throw new NotImplementedError('Not implemented');
-    // remove line with error and write your code here
-  }
-}
+  constructor(dir = '') {
+    this.dir;
+    if (dir === '') {
+      this.dir = true;
+    } else {
+      this.dir = false;
+    }
+  };
+
+  encrypt(string, keyWord) {
+    if (!string || !keyWord) throw new Error('Incorrect arguments!');
+    let encrStr = '';
+    let upperKeyWord = keyWord.toUpperCase();
+    while (upperKeyWord.length < string.length) {
+      upperKeyWord += keyWord.toUpperCase();
+    }
+    for (let i = 0, j = 0; i < string.length; i++) {
+      if (!string[i].match(/[a-z]/i)) {
+        encrStr += string[i];
+      }
+      else {
+        encrStr += String.fromCharCode(((string[i].toUpperCase().charCodeAt(0) + upperKeyWord[j++].charCodeAt(0)) % 26) + 65);
+      }
+    }
+    if (this.dir) {
+      return encrStr;
+    } else {
+      return encrStr.split('').reverse().join('');
+    }
+  };
+  decrypt(string, keyWord) {
+    if (!string || !keyWord) throw new Error('Incorrect arguments!');
+    let encrStr = '';
+    let upperKeyWord = keyWord.toUpperCase();
+    while (upperKeyWord.length < string.length) {
+      upperKeyWord += keyWord.toUpperCase();
+    }
+    for (let i = 0, j = 0; i < string.length; i++) {
+      if (!string[i].match(/[a-z]/i)) {
+        encrStr += string[i];
+      }
+      else {
+        encrStr += String.fromCharCode(((string[i].toUpperCase().charCodeAt(0) - upperKeyWord[j++].charCodeAt(0) + 26) % 26) + 65);
+      }
+    }
+    if (this.dir) {
+      return encrStr;
+    } else {
+      return encrStr.split('').reverse().join('');
+    }
+  };
+};
 
 module.exports = {
   VigenereCipheringMachine
